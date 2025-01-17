@@ -54,13 +54,11 @@ It is built with Python and uses a MySQL database for data storage.
     ZkopírovatUpravit
     
     `git clone <https://github.com/TadeasPir/AlphaV2Python>
-    cd <AlphaV2Python>` 
+   cd <AlphaV2Python>` 
     
 2.  Install dependencies:
     
-    bash
-    
-    run
+    bash  run
     
     `pip install -r requirements.txt` 
     
@@ -84,6 +82,31 @@ logging:
   file: "app.log"
 ```
 logging has these levels (DEBUG, INFO, WARNING, ERROR)
+## Project struture 
+```plaintext
+src/
+├── config.yaml                     # Configuration file for database and logging settings
+├── models/
+│   ├── achievement.py              # Manages user achievements
+│   ├── game.py                     # Handles game-related operations
+│   ├── genre_enum.py               # Defines game genres as an enumeration
+│   ├── importing.py                # Functions for importing users and games
+│   ├── library.py                  # Manages user-game relationships
+│   ├── report.py                   # Generates and saves reports
+│   ├── review.py                   # Manages user reviews
+│   └── user.py                     # Manages user records
+├── ui/
+│   ├── achievement_console.py      # Console interface for achievements
+│   ├── game_console.py             # Console interface for games
+│   ├── library_console.py          # Console interface for libraries
+│   ├── reports_console.py          # Console interface for reports
+│   ├── review_console.py           # Console interface for reviews
+│   └── user_console.py             # Console interface for users
+├── database/
+│   └── databse.py                  # database connector
+├── app_console.py                  # Main console application
+└── utils.py                        # Utility functions (e.g., logging setup)
+```
     
 
 ## Usage
@@ -108,40 +131,32 @@ logging has these levels (DEBUG, INFO, WARNING, ERROR)
 -   Generate a game overview report:
     
     python
+    
+    
 
+    
+---
+
+## Sources
+
+- [SPŠE Jecná Moodle](https://moodle.spsejecna.cz/mod/page/view.php?id=1940)
+- [ChatGPT](https://chatgpt.com/)
+- [Claude AI](https://claude.ai/)
+### consulted
+- Martin Hornych 
+- Tomáš Križko 
+- Ondra Kábrt
+- Adam Hlaváčik
+
+---
 ## Dependencies
 
 -   Python 3.10 or above
 -   MySQL Connector
 -   Logging
 -   CSV and JSON modules
-## Sources 
 
 ## Contributing
 
 Contributions are welcome! Please create an issue or submit a pull request for any bugs or feature requests.
-
-##
-```plaintext
-src/
-├── config.yaml                     # Configuration file for database and logging settings
-├── models/
-│   ├── achievement.py              # Manages user achievements
-│   ├── game.py                     # Handles game-related operations
-│   ├── genre_enum.py               # Defines game genres as an enumeration
-│   ├── importing.py                # Functions for importing users and games
-│   ├── library.py                  # Manages user-game relationships
-│   ├── report.py                   # Generates and saves reports
-│   ├── review.py                   # Manages user reviews
-│   └── user.py                     # Manages user records
-├── ui/
-│   ├── achievement_console.py      # Console interface for achievements
-│   ├── game_console.py             # Console interface for games
-│   ├── library_console.py          # Console interface for libraries
-│   ├── reports_console.py          # Console interface for reports
-│   ├── review_console.py           # Console interface for reviews
-│   └── user_console.py             # Console interface for users
-├── app_console.py                  # Main console application
-└── utils.py                        # Utility functions (e.g., logging setup)
-```
 
