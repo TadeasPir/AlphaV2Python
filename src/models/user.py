@@ -11,16 +11,25 @@ class User:
         self.credit_points = credit_points
 
     def save(self):
-        """Uloží (vloží nebo updatuje) uživatele do databáze."""
-        cursor = Database.get_cursor()
+
         try:
-            # Insert
-            query = """
-                INSERT INTO Users (username, email, is_active, credit_points)
-                VALUES (%s, %s, %s, %s)
-            """
-            cursor.execute(query, (self.username, self.email, self.is_active, self.credit_points))
-            self.user_id = cursor.lastrowid
+            cursor = Database.get_cursor()
+            if self.user_id:
+                # Update
+                query = """
+                    UPDATE Users
+                    SET username = %s, email = %s, is_active = %s, credit_points = %s
+                    WHERE user_id = %s
+                """
+                cursor.execute(query, (self.username, self.email, self.is_active, self.credit_points, self.user_id))
+            else:
+                # Insert
+                query = """
+                    INSERT INTO Users (username, email, is_active, credit_points)
+                    VALUES (%s, %s, %s, %s)
+                """
+                cursor.execute(query, (self.username, self.email, self.is_active, self.credit_points))
+                self.user_id = cursor.lastrowid
 
             Database.get_connection().commit()
             cursor.close()
@@ -28,23 +37,10 @@ class User:
         except Error as e:
             logging.error(f"Error saving user: {e}")
 
-    def update(self):
-        try:
-            cursor = Database.get_cursor()
-            if self.user_id:
-                # Update
-                query = """
-                                    UPDATE Users
-                                    SET username = %s, email = %s, is_active = %s, credit_points = %s
-                                    WHERE user_id = %s
-                                """
-                cursor.execute(query, (self.username, self.email, self.is_active, self.credit_points, self.user_id))
-        except Error as e:
-            logging.error(f"Error editing user: {e}")
 
 
     def delete(self):
-        """Smaže uživatele z databáze."""
+
         if not self.user_id:
             raise ValueError("Cannot delete a user without a user_id.")
 
@@ -59,25 +55,24 @@ class User:
             logging.error(f"Error deleting user: {e}")
             raise
 
-    @classmethod
-    def find(cls, user_id):
-        """Najde uživatele podle ID."""
+
+    def find(self):
+
         try:
-            cursor = Database.get_cursor(dictionary=True)
+            cursor = Database.get_cursor()
             query = "SELECT * FROM Users WHERE user_id = %s"
-            cursor.execute(query, (user_id,))
+            cursor.execute(query, (self.user_id,))
             row = cursor.fetchone()
             cursor.close()
-            if row:
-                return cls(**row)
-            return None
+
+            return row
         except Error as e:
             logging.error(f"Error finding user: {e}")
-            raise
+
 
     @classmethod
     def all(cls):
-        """Vrátí všechny uživatele."""
+
         try:
             cursor = Database.get_cursor(dictionary=True)
             query = "SELECT * FROM Users"
@@ -91,9 +86,7 @@ class User:
 
     @classmethod
     def transfer_credits(cls, from_user_id, to_user_id, amount):
-        """
-        Převádí kreditní body mezi dvěma uživateli v jedné transakci.
-        """
+
         if amount <= 0:
             raise ValueError("Amount must be positive.")
 
@@ -103,21 +96,29 @@ class User:
         try:
             conn.start_transaction()
 
-            # Zkontrolujeme, jestli mají oba uživatelé dostatečnou existenci
-            from_user = cls.find(from_user_id)
-            to_user = cls.find(to_user_id)
+            from_user_temp = User(user_id=from_user_id).find()
+
+            to_user_temp = User(user_id=to_user_id).find()
+            from_user = User(user_id=from_user_temp[0],username=from_user_temp[1],email= from_user_temp[2], credit_points=from_user_temp[4])
+
+            to_user = User(user_id=to_user_temp[0],username=to_user_temp[1],email= to_user_temp[2], credit_points=to_user_temp[4])
+
+
+
 
             if from_user is None or to_user is None:
-                raise ValueError("One of the users does not exist.")
+                logging.error("One of the users does not exist.")
+
 
             if from_user.credit_points < amount:
-                raise ValueError("Insufficient credit points in source user account.")
+                logging.error("Insufficient credit points in source user account.")
 
-            # Změna kreditu
-            from_user.credit_points -= amount
-            to_user.credit_points += amount
 
-            # Update v DB
+
+            from_user.credit_points = from_user.credit_points - amount
+            to_user.credit_points = amount + to_user.credit_points
+
+
             update_query = "UPDATE Users SET credit_points = %s WHERE user_id = %s"
             cursor.execute(update_query, (from_user.credit_points, from_user.user_id))
             cursor.execute(update_query, (to_user.credit_points, to_user.user_id))
@@ -129,9 +130,7 @@ class User:
         except Error as e:
             conn.rollback()
             logging.error(f"Error transferring credits: {e}")
-            raise
         finally:
-            if not cursor.closed:
                 cursor.close()
 
     def __repr__(self):

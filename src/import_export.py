@@ -5,10 +5,7 @@ from .models.user import User
 from .models.game import Game
 
 def import_users_from_csv(csv_file_path):
-    """
-    Načte uživatele z CSV a uloží je do tabulky Users.
-    CSV předpokládá formát: username,email,is_active,credit_points
-    """
+
     try:
         with open(csv_file_path, mode='r', encoding='utf-8') as file:
             reader = csv.DictReader(file)
@@ -25,10 +22,7 @@ def import_users_from_csv(csv_file_path):
         raise
 
 def import_games_from_json(json_file_path):
-    """
-    Načte hry z JSON a uloží je do tabulky Games.
-    JSON předpokládá list slovníků s klíči: title, release_date, genre, price, is_multiplayer
-    """
+
     try:
         with open(json_file_path, mode='r', encoding='utf-8') as file:
             data = json.load(file)

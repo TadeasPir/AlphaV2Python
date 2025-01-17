@@ -39,7 +39,7 @@ class Review:
             logging.info(f"Review saved: {self}")
         except Error as e:
             logging.error(f"Error saving review: {e}")
-            raise
+
 
     def delete(self):
         if not self.review_id:
@@ -55,20 +55,18 @@ class Review:
             logging.error(f"Error deleting review: {e}")
             raise
 
-    @classmethod
-    def find(cls, review_id):
+    def find(self):
         try:
-            cursor = Database.get_cursor(dictionary=True)
+            cursor = Database.get_cursor()
             query = "SELECT * FROM Reviews WHERE review_id = %s"
-            cursor.execute(query, (review_id,))
+            cursor.execute(query, (self.review_id,))
             row = cursor.fetchone()
             cursor.close()
-            if row:
-                return cls(**row)
-            return None
+
+            return row
+
         except Error as e:
-            logging.error(f"Error finding review: {e}")
-            raise
+            logging.error(f"Error finding game: {e}")
 
     @classmethod
     def all(cls):
@@ -81,7 +79,7 @@ class Review:
             return [cls(**row) for row in rows]
         except Error as e:
             logging.error(f"Error retrieving reviews: {e}")
-            raise
+
 
     def __repr__(self):
         return f"Review(review_id={self.review_id}, game_id={self.game_id}, user_id={self.user_id}, " \

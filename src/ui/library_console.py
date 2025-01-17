@@ -1,11 +1,10 @@
 import logging
+from datetime import datetime
 
-from src.models.user import User
-
-
-class UserConsole:
+from src.models.library import Library
 
 
+class LibraryConsole:
     def __init__(self, interface):
         self.isrunning = True
         self.interface = interface
@@ -25,7 +24,6 @@ class UserConsole:
             ("edit", self.update),
             ("delete", self.delete),
             ("read", self.find),
-            ("transfer points", self.transaction),
             ("end", self.terminate),
         ]
 
@@ -55,23 +53,18 @@ class UserConsole:
         self.isrunning = False
 
     def add(self):
-        user1 = User(username=input("name"),email= input("email"), credit_points=input("credit points"))
-        user1.save()
+        library1 = Library(user_id=int(input("user_id")), game_id=int(input("game_id")), purchase_date= datetime.now().strftime('%Y-%m-%d'), has_dlc=bool(input("has DLC ")))
+        library1.save()
     def update(self):
-            user1 = User(user_id=input("id"),username=input("name"),email= input("email"), credit_points=input("credit points"))
-            user1.save()
+       library1 = Library(user_id=int(input("user_id")), game_id=int(input("game_id")), purchase_date=datetime.now().strftime('%Y-%m-%d'), has_dlc=bool(input("has DLC ")))
+       library1.save()
     def delete(self):
-            user1 = User(user_id=input("id"))
-            user1.delete()
-    def transaction(self):
-        user1 = input("from: id")
-        user2 = input("to: id")
-        ammount =int(input("ammount of credits"))
-        User.transfer_credits(user1,user2,ammount)
+       library1 = Library(user_id=int(input("user_id")), game_id=int(input("game_id")))
+       library1.delete()
+
 
     def find(self):
-        user_temp = User(user_id=input("id")).find()
-        user1 = User(user_id=user_temp[0], username=user_temp[1], email=user_temp[2],is_active=user_temp[3],credit_points=user_temp[4])
-        print(repr(user1))
-
+        library_temp = Library(user_id=int(input("id of user")),game_id=int(input("id of game"))).find()
+        library1 = Library(user_id=library_temp[0], game_id=library_temp[1], purchase_date=library_temp[2], has_dlc=library_temp[3])
+        print(repr(library1))
 

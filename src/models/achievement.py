@@ -56,20 +56,18 @@ class Achievement:
             logging.error(f"Error deleting achievement: {e}")
             raise
 
-    @classmethod
-    def find(cls, achievement_id):
+    def find(self):
         try:
-            cursor = Database.get_cursor(dictionary=True)
+            cursor = Database.get_cursor()
             query = "SELECT * FROM Achievements WHERE achievement_id = %s"
-            cursor.execute(query, (achievement_id,))
+            cursor.execute(query, (self.achievement_id,))
             row = cursor.fetchone()
             cursor.close()
-            if row:
-                return cls(**row)
-            return None
+
+            return row
+
         except Error as e:
-            logging.error(f"Error finding achievement: {e}")
-            raise
+            logging.error(f"Error finding game: {e}")
 
     @classmethod
     def all(cls):

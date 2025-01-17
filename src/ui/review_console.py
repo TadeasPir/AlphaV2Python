@@ -1,11 +1,10 @@
 import logging
+from datetime import datetime
 
-from src.models.user import User
-
-
-class UserConsole:
+from src.models.review import Review
 
 
+class ReviewConsole:
     def __init__(self, interface):
         self.isrunning = True
         self.interface = interface
@@ -25,7 +24,6 @@ class UserConsole:
             ("edit", self.update),
             ("delete", self.delete),
             ("read", self.find),
-            ("transfer points", self.transaction),
             ("end", self.terminate),
         ]
 
@@ -55,23 +53,17 @@ class UserConsole:
         self.isrunning = False
 
     def add(self):
-        user1 = User(username=input("name"),email= input("email"), credit_points=input("credit points"))
-        user1.save()
+
+        review1 = Review(game_id=int(input("game id")),user_id=int(input("user id")),review_date= datetime.now().strftime('%Y-%m-%d'), rating=float(input("rating")),review_text=input("review"))
+        review1.save()
     def update(self):
-            user1 = User(user_id=input("id"),username=input("name"),email= input("email"), credit_points=input("credit points"))
-            user1.save()
+            review1 = Review(review_id=int(input("review id")),game_id=int(input("game id")),user_id=int(input("user id")),review_date= datetime.now().strftime('%Y-%m-%d'), rating=float(input("rating")),review_text=input("review "))
+            review1.save()
     def delete(self):
-            user1 = User(user_id=input("id"))
-            user1.delete()
-    def transaction(self):
-        user1 = input("from: id")
-        user2 = input("to: id")
-        ammount =int(input("ammount of credits"))
-        User.transfer_credits(user1,user2,ammount)
+            review1 = Review(review_id=input("id"))
+            review1.delete()
 
     def find(self):
-        user_temp = User(user_id=input("id")).find()
-        user1 = User(user_id=user_temp[0], username=user_temp[1], email=user_temp[2],is_active=user_temp[3],credit_points=user_temp[4])
-        print(repr(user1))
-
-
+        review_temp = Review(review_id=input("id")).find()
+        review1 = Review(review_id=review_temp[0], game_id=review_temp[1], user_id=review_temp[2], rating=review_temp[3], review_text=review_temp[4], review_date=review_temp[5])
+        print(repr(review1))

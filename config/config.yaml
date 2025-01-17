@@ -5,5 +5,5 @@ db:
   database: "GameLibraryDB"
 
 logging:
-  level: "INFO"
+  level: "ERROR"
   file: "app.log"

@@ -1,11 +1,10 @@
 import logging
+from datetime import datetime
 
-from src.models.user import User
-
-
-class UserConsole:
+from src.models.achievement import Achievement
 
 
+class AchievementConsole:
     def __init__(self, interface):
         self.isrunning = True
         self.interface = interface
@@ -25,7 +24,6 @@ class UserConsole:
             ("edit", self.update),
             ("delete", self.delete),
             ("read", self.find),
-            ("transfer points", self.transaction),
             ("end", self.terminate),
         ]
 
@@ -53,25 +51,20 @@ class UserConsole:
 
     def terminate(self):
         self.isrunning = False
-
+    # self, achievement_id=None, user_id=None, game_id=None, achievement_title=None, date_earned=None, points_earned=0.0
     def add(self):
-        user1 = User(username=input("name"),email= input("email"), credit_points=input("credit points"))
-        user1.save()
+        achievement1 = Achievement(user_id= int(input("user id")),game_id=int(input(" game id")), achievement_title=input("achievement title"),date_earned=datetime.now().strftime('%Y-%m-%d'),points_earned=float(input("points earned ")))
+        achievement1.save()
     def update(self):
-            user1 = User(user_id=input("id"),username=input("name"),email= input("email"), credit_points=input("credit points"))
-            user1.save()
+            achievement1 = Achievement(achievement_id=int(input("achievement_id id")),user_id=int(input("user id")),game_id= int(input(" game id")), achievement_title=input("achievement title"),date_earned=datetime.now().strftime('%Y-%m-%d'),points_earned=float(input("points earned ")))
+            achievement1.save()
     def delete(self):
-            user1 = User(user_id=input("id"))
-            user1.delete()
-    def transaction(self):
-        user1 = input("from: id")
-        user2 = input("to: id")
-        ammount =int(input("ammount of credits"))
-        User.transfer_credits(user1,user2,ammount)
+            achievement1 = Achievement(game_id=input("id"))
+            achievement1.delete()
+
 
     def find(self):
-        user_temp = User(user_id=input("id")).find()
-        user1 = User(user_id=user_temp[0], username=user_temp[1], email=user_temp[2],is_active=user_temp[3],credit_points=user_temp[4])
-        print(repr(user1))
-
+        achievement_temp = Achievement(game_id=input("id")).find()
+        achievement1 = Achievement(achievement_id=achievement_temp[0], title=achievement_temp[1], release_date=achievement_temp[2], genre=achievement_temp[3], price=achievement_temp[4], is_multiplayer=achievement_temp[5])
+        print(repr(achievement1))
 

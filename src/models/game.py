@@ -1,6 +1,9 @@
 import logging
 from mysql.connector import Error
-from src.database.database_singleton import DatabaseSingleton
+
+from src.database.database import Database
+from src.models.genre_enum import GenreEnum
+
 
 class Game:
     def __init__(self, game_id=None, title=None, release_date=None, genre='Other', price=0.0, is_multiplayer=False):
@@ -10,10 +13,17 @@ class Game:
         self.genre = genre
         self.price = price
         self.is_multiplayer = is_multiplayer
+        self.genre_enum = GenreEnum
+
 
     def save(self):
+
         try:
             cursor = Database.get_cursor()
+            if self.genre not in GenreEnum.__members__:
+                logging.error("incorect value for genre")
+                raise ValueError
+
             if self.game_id:
                 # Update
                 query = """
@@ -56,20 +66,20 @@ class Game:
             logging.error(f"Error deleting game: {e}")
             raise
 
-    @classmethod
-    def find(cls, game_id):
+
+    def find(self):
         try:
-            cursor = Database.get_cursor(dictionary=True)
+            cursor = Database.get_cursor()
             query = "SELECT * FROM Games WHERE game_id = %s"
-            cursor.execute(query, (game_id,))
+            cursor.execute(query, (self.game_id,))
             row = cursor.fetchone()
             cursor.close()
-            if row:
-                return cls(**row)
-            return None
+
+            return row
+
         except Error as e:
             logging.error(f"Error finding game: {e}")
-            raise
+
 
     @classmethod
     def all(cls):

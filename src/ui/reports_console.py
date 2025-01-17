@@ -1,11 +1,9 @@
 import logging
 
-from src.models.user import User
+from src.models.game import Game
 
 
-class UserConsole:
-
-
+class GameConsole:
     def __init__(self, interface):
         self.isrunning = True
         self.interface = interface
@@ -25,7 +23,6 @@ class UserConsole:
             ("edit", self.update),
             ("delete", self.delete),
             ("read", self.find),
-            ("transfer points", self.transaction),
             ("end", self.terminate),
         ]
 
@@ -38,7 +35,7 @@ class UserConsole:
 
         choosen_num = None
         while choosen_num is None:
-            choosen_num = input("iput operation number (1-" + str(len(commands)) + "): ").strip()
+            choosen_num = input("input operation number (1-" + str(len(commands)) + "): ").strip()
             try:
                 choosen_num = int(choosen_num)
                 if not 0 < choosen_num <= len(commands):
@@ -55,23 +52,18 @@ class UserConsole:
         self.isrunning = False
 
     def add(self):
-        user1 = User(username=input("name"),email= input("email"), credit_points=input("credit points"))
-        user1.save()
+        game1 = Game(title=input("title"),release_date= input("relese date: YYYY-MM-DD"), genre=input("genre"),price=float(input("price")),is_multiplayer=bool(input("is multiplayer? ")))
+        game1.save()
     def update(self):
-            user1 = User(user_id=input("id"),username=input("name"),email= input("email"), credit_points=input("credit points"))
-            user1.save()
+            game1 = Game(game_id=int(input("game_id")), title=input("title"),release_date= input("relese date: YYYY-MM-DD"), genre=input("genre"),price=float(input("price")),is_multiplayer=bool(input("is multiplayer? ")))
+            game1.save()
     def delete(self):
-            user1 = User(user_id=input("id"))
-            user1.delete()
-    def transaction(self):
-        user1 = input("from: id")
-        user2 = input("to: id")
-        ammount =int(input("ammount of credits"))
-        User.transfer_credits(user1,user2,ammount)
+            game1 = Game(game_id=input("id"))
+            game1.delete()
+
 
     def find(self):
-        user_temp = User(user_id=input("id")).find()
-        user1 = User(user_id=user_temp[0], username=user_temp[1], email=user_temp[2],is_active=user_temp[3],credit_points=user_temp[4])
-        print(repr(user1))
-
+        game_temp = Game(game_id=input("id")).find()
+        game1 = Game(game_id=game_temp[0], title=game_temp[1], release_date=game_temp[2], genre=game_temp[3], price=game_temp[4], is_multiplayer=game_temp[5])
+        print(repr(game1))
 

@@ -10,6 +10,8 @@ def setup_logging(level: str, log_file: str):
     Args:
         level (str): Logging level (DEBUG, INFO, WARNING, ERROR)
         log_file (str): Path to the log file
+
+    this class was chat gpt assisted
     """
     # Create logs directory if it doesn't exist
     log_dir = os.path.dirname(log_file)
