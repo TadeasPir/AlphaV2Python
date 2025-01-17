@@ -1,5 +1,5 @@
 
-# Game library databse manager
+# Game library databse manager by Tadeas Pirich
 
 This project is a **game library management system** that facilitates the management of users, games, achievements, reviews, libraries, and reports. It provides functionalities for importing data, managing database records, and generating reports.
 
