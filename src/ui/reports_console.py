@@ -1,9 +1,12 @@
 import logging
 
+from Tools.scripts.fixdiv import report
+
 from src.models.game import Game
+from src.models.report import Report
 
 
-class GameConsole:
+class ReportConsole:
     def __init__(self, interface):
         self.isrunning = True
         self.interface = interface
@@ -19,11 +22,9 @@ class GameConsole:
 
     def menu_input(self):
         commands = [
-            ("add", self.add),
-            ("edit", self.update),
-            ("delete", self.delete),
-            ("read", self.find),
-            ("end", self.terminate),
+            ("game overview", self.v_game_overview),
+            ("user library stats", self.v_user_library_stats),
+            ("exit", self.terminate()),
         ]
 
         self.interface.print_line()
@@ -51,19 +52,11 @@ class GameConsole:
     def terminate(self):
         self.isrunning = False
 
-    def add(self):
-        game1 = Game(title=input("title"),release_date= input("relese date: YYYY-MM-DD"), genre=input("genre"),price=float(input("price")),is_multiplayer=bool(input("is multiplayer? ")))
-        game1.save()
-    def update(self):
-            game1 = Game(game_id=int(input("game_id")), title=input("title"),release_date= input("relese date: YYYY-MM-DD"), genre=input("genre"),price=float(input("price")),is_multiplayer=bool(input("is multiplayer? ")))
-            game1.save()
-    def delete(self):
-            game1 = Game(game_id=input("id"))
-            game1.delete()
+    def v_game_overview(self):
+        report1 = Report()
+        report1.v_game_overview()
 
-
-    def find(self):
-        game_temp = Game(game_id=input("id")).find()
-        game1 = Game(game_id=game_temp[0], title=game_temp[1], release_date=game_temp[2], genre=game_temp[3], price=game_temp[4], is_multiplayer=game_temp[5])
-        print(repr(game1))
+    def v_user_library_stats(self):
+        report1 = Report()
+        report1.v_user_library_stats()
 

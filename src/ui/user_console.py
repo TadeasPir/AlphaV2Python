@@ -69,6 +69,8 @@ class UserConsole:
         ammount =int(input("ammount of credits"))
         User.transfer_credits(user1,user2,ammount)
 
+
+
     def find(self):
         user_temp = User(user_id=input("id")).find()
         user1 = User(user_id=user_temp[0], username=user_temp[1], email=user_temp[2],is_active=user_temp[3],credit_points=user_temp[4])

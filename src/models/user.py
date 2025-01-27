@@ -1,3 +1,4 @@
+import csv
 import logging
 from mysql.connector import Error
 from src.database.database import Database
@@ -84,6 +85,8 @@ class User:
             logging.error(f"Error retrieving all users: {e}")
             raise
 
+
+
     @classmethod
     def transfer_credits(cls, from_user_id, to_user_id, amount):
 
@@ -132,6 +135,9 @@ class User:
             logging.error(f"Error transferring credits: {e}")
         finally:
                 cursor.close()
+
+
+
 
     def __repr__(self):
         return f"User(user_id={self.user_id}, username='{self.username}', email='{self.email}', " \

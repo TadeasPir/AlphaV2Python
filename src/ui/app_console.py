@@ -3,9 +3,12 @@ from src.config import Config
 from src.ui.achievement_console import AchievementConsole
 from src.ui.game_console import GameConsole
 from src.ui.library_console import LibraryConsole
+from src.ui.reports_console import ReportConsole
 from src.ui.review_console import ReviewConsole
 from src.ui.user_console import UserConsole
 from src.utils import setup_logging
+from src.models.importing import import_users_from_csv
+
 
 
 
@@ -21,6 +24,7 @@ class AppConsole:
             LibraryConsole(self),
             ReviewConsole(self),
             AchievementConsole(self),
+            ReportConsole(self),
         ]
         logging.info("AppConsole initialized.")
 
@@ -50,6 +54,9 @@ class AppConsole:
             ("Edit review", self.table_console[3].menu_input),
             ("Edit achievements", self.table_console[4].menu_input),
             ("reports", self.table_console[5].menu_input),
+            ("import users from csv", import_users_from_csv("./imports/users.csv")),
+
+
             ("end ", self.terminate),
         ]
 
